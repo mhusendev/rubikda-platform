@@ -101,6 +101,7 @@
     <!-- table for upload -->
     <div class="w-full px-5 py-5 shadow-lg rounded-lg">
          <p class="mb-5 mt-2 border-b w-fit border-black pb-3">Upload Dokumentasi</p>
+         <p class="mb-5 text-sm text-red-500">{{ file_eror }}</p>
          <p class="mb-5 text-sm">* Untuk Jenis File Proposal dan Surat adalah pdf , untuk vidio mkv/mp4, untuk gambar jpg/jpeg </p>
          <div class="w-[100%] grid grid-cols-1 md:grid-cols-3 gap-4">
             <input type="file" class="w-full" v-on:change="previewFiles" :multiple="false"/>
@@ -197,6 +198,8 @@ export default {
             inovasi_covid:[],
             jenis_urusan:[],
             tema:[],
+            validasi_file:['proposal','surat','foto cover', 'foto dokumentasi'],
+            file_eror:'',
             validasi:{
               val1:false,
               val2:false,
@@ -212,11 +215,12 @@ export default {
             },
             keterangan:'',
             popalert:false,
-            messagealert:'Berhasil'
+            messagealert:'Berhasil',
+            arr_file:[]
         }
     },
     methods: {
-      validate () {
+      async validate () {
        this.validasi.val1 = this.nama_inovasi?false:true
        this.validasi.val2 = this.inovator?false:true
        this.validasi.val3 = this.nama_perangkat_daerah?false:true
@@ -234,13 +238,22 @@ export default {
        && this.validasi.val5 == false  && this.validasi.val6 == false
        && this.validasi.val7 == false  && this.validasi.val8 == false
        && this.validasi.val9 == false  && this.validasi.val10 == false  && this.validasi.val11 == false) {
-        return true
+        let FinalArray = [];
+        FinalArray = await this.validasi_file.filter (name => !this.arr_file.includes(name));
+        if(FinalArray.length <1) {
+          return true
+        } else {
+          this.file_eror = 'harap Upload berkas '+ JSON.stringify(FinalArray).replace(/[\[\]']+/g,'')
+        }
+
+     
        } else {
         return false
        }
 
       },
        async save(){
+        // console.log(this.filetemp)
         try{
          let datavalidasi = await this.validate()
          console.log(datavalidasi)
@@ -325,12 +338,16 @@ console.log(err)
        
         },
         async addFile(){
-         
+          console.log(this.selectedDocs)
            let data = {
             jenis_docs: this.selectedDocs,
             data: this.file
            }
            this.filetemp.push(data)
+           for(let i in this.filetemp){
+            this.arr_file.push(this.filetemp[i].jenis_docs)
+           }
+           console.log(this.arr_file)
            console.log(this.filetemp[0].data.name)
         },
         previewFiles(event) {
