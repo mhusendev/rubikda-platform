@@ -81,7 +81,7 @@
                   {{ inovasi.inisiator }}
                 </td>
                 <td class="px-6 py-4">
-                  {{ (inovasi.acc == 'sudah')? 'Sudah Acc':'Belum Acc' }}
+                  {{ inovasi.acc  }}
                 </td>
                 <td class="px-6 py-4">
                     <div class="flex gap-2">
