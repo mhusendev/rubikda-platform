@@ -561,12 +561,12 @@ console.log(err)
           .then((res) => res.json())
           .then((res)=> {
             if(res.status !== 200) {
-                this.$router.push( {name:'login'})
+                this.$router.push( {name:'userlogin'})
             }
             console.log(res.status)
           })
           .catch((err)=> {
-            this.$router.push( {name:'login'})
+            this.$router.push( {name:'userlogin'})
           })
         
         this.getTahapan()
